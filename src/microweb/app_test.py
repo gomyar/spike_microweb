@@ -28,12 +28,12 @@ class MicrowebTest(unittest.TestCase):
         self.assertEquals('Bobs Burgers', document['title'])
 
     def test_get_request(self):
-        result = self.mock_mongo.microweb.requests.insert_one({
+        setup1 = self.mock_mongo.microweb.requests.insert_one({
             'title': 'Neds Fries',
             'email': 'ned@ned.com',
             'timestamp': '2020-10-10'})
 
-        response = self.client.get("/request/{}".format(result.inserted_id))
+        response = self.client.get("/request/{}".format(setup1.inserted_id))
 
         self.assertEquals(200, response.status_code)
         self.assertEquals('Neds Fries', response.json['title'])
@@ -45,16 +45,16 @@ class MicrowebTest(unittest.TestCase):
         self.assertEquals(404, response.status_code)
 
     def test_delete_request(self):
-        result = self.mock_mongo.microweb.requests.insert_one({
+        setup1 = self.mock_mongo.microweb.requests.insert_one({
             'title': 'Delete me please',
             'email': 'delete@ned.com',
             'timestamp': '2022-10-10'})
 
-        response = self.client.delete("/request/{}".format(result.inserted_id))
+        response = self.client.delete("/request/{}".format(setup1.inserted_id))
         self.assertEquals(204, response.status_code)
 
         self.assertEquals(
-            None, self.mock_mongo.microweb.result.find_one(result.inserted_id))
+            None, self.mock_mongo.microweb.result.find_one(setup1.inserted_id))
 
     def test_delete_request_nonexistant(self):
         response = self.client.delete("/request/5e52aa9d24c18d1fc31ce3ee")
