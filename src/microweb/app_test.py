@@ -41,3 +41,7 @@ class MicrowebTest(unittest.TestCase):
         self.assertEquals('Neds Fries', response.json['title'])
         self.assertEquals('ned@ned.com', response.json['email'])
         self.assertEquals('2020-10-10', response.json['timestamp'])
+
+    def test_get_request_nonexistant(self):
+        response = self.client.get("/request/5e52aa9d24c18d1fc31ce3ee")
+        self.assertEquals(404, response.status_code)

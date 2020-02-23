@@ -36,11 +36,14 @@ def request_post():
 
 @app.route('/request/<request_id>', methods=['GET'])
 def request_get(request_id):
-     document = app.config['mongo'].microweb.requests.find_one(
+    document = app.config['mongo'].microweb.requests.find_one(
         {'_id': ObjectId(request_id)})
 
-     return jsonify(
-        id=str(document['_id']),
-        email=document['email'],
-        title=document['title'],
-        timestamp=document['timestamp']), 200
+    if document:
+        return jsonify(
+            id=str(document['_id']),
+            email=document['email'],
+            title=document['title'],
+            timestamp=document['timestamp']), 200
+    else:
+        return "Not found", 404
