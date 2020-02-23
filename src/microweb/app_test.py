@@ -82,3 +82,8 @@ class MicrowebTest(unittest.TestCase):
         self.assertEquals("Fred", results[1]['title'])
         self.assertEquals("fred@fred.com", results[1]['email'])
         self.assertEquals("2020-12-12", results[1]['timestamp'])
+
+    def test_redirect(self):
+        response = self.client.get("/")
+
+        self.assertEquals(302, response.status_code)

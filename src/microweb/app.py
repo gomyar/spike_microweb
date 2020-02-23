@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Flask
 from flask import request
 from flask import jsonify
+from flask import redirect
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -25,8 +26,13 @@ def get_collection():
     return app.config['mongo'].microweb.requests
 
 
+@app.route('/', methods=['GET'])
+def index():
+    return redirect('request_root')
+
+
 @app.route('/request', methods=['GET', 'POST'])
-def request_post():
+def request_root():
     found = get_collection().find()
     if request.method == 'GET':
         results = [serialize_request(document) for document in found]
