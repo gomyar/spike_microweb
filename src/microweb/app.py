@@ -51,4 +51,7 @@ def request_get(request_id):
     elif request.method == 'DELETE':
         result = app.config['mongo'].microweb.requests.delete_one({
             '_id': ObjectId(request_id)})
-        return "", 204
+        if result.deleted_count:
+            return "", 204
+        else:
+            return "Not Found", 404

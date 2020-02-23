@@ -59,3 +59,7 @@ class MicrowebTest(unittest.TestCase):
 
         self.assertEquals(
             None, self.mock_mongo.microweb.result.find_one(result.inserted_id))
+
+    def test_delete_request_nonexistant(self):
+        response = self.client.delete("/request/5e52aa9d24c18d1fc31ce3ee")
+        self.assertEquals(404, response.status_code)
