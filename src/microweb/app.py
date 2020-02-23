@@ -1,4 +1,6 @@
 
+import os
+
 from datetime import datetime
 
 from flask import Flask
@@ -10,7 +12,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
-app.config['mongo'] = MongoClient()
+app.config['mongo'] = MongoClient(host=os.getenv('MONGODB_HOST'))
 
 
 def serialize_request(document):
@@ -23,7 +25,8 @@ def serialize_request(document):
 
 
 def get_collection():
-    return app.config['mongo'].microweb.requests
+    db_name = os.getenv('MONGODB_DBNAME') or 'microweb'
+    return app.config['mongo'][db_name].requests
 
 
 @app.route('/', methods=['GET'])

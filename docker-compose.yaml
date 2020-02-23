@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+
+  microweb:
+    ports:
+      - "5000:5000"
+    image: microweb
+    environment:
+      - MONGODB_HOST=mongo
+      - MONGODB_DBNAME=microweb
+      - SERET_KEY=keepitsecretkeepitsafe
