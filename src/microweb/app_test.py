@@ -13,10 +13,6 @@ class MicrowebTest(unittest.TestCase):
         app.config['mongo'] = self.mock_mongo
         self.client = app.test_client()
 
-    def test_get(self):
-        response = self.client.get('/')
-        self.assertTrue('Hello, World' in response.data.decode())
-
     @freeze_time('2019-01-01')
     def test_request(self):
         response = self.client.post(

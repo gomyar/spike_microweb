@@ -12,11 +12,6 @@ app = Flask(__name__)
 app.config['mongo'] = MongoClient()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
-
 @app.route('/request', methods=['GET', 'POST'])
 def request_post():
     found = app.config['mongo'].microweb.requests.find()
