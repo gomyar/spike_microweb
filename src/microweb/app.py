@@ -34,16 +34,21 @@ def request_post():
         timestamp=document['timestamp']), 201
 
 
-@app.route('/request/<request_id>', methods=['GET'])
+@app.route('/request/<request_id>', methods=['GET', 'DELETE'])
 def request_get(request_id):
-    document = app.config['mongo'].microweb.requests.find_one(
-        {'_id': ObjectId(request_id)})
+    if request.method == 'GET':
+        document = app.config['mongo'].microweb.requests.find_one(
+            {'_id': ObjectId(request_id)})
 
-    if document:
-        return jsonify(
-            id=str(document['_id']),
-            email=document['email'],
-            title=document['title'],
-            timestamp=document['timestamp']), 200
-    else:
-        return "Not found", 404
+        if document:
+            return jsonify(
+                id=str(document['_id']),
+                email=document['email'],
+                title=document['title'],
+                timestamp=document['timestamp']), 200
+        else:
+            return "Not found", 404
+    elif request.method == 'DELETE':
+        result = app.config['mongo'].microweb.requests.delete_one({
+            '_id': ObjectId(request_id)})
+        return "", 204
