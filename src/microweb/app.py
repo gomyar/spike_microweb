@@ -17,21 +17,31 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/request', methods=['POST'])
+@app.route('/request', methods=['GET', 'POST'])
 def request_post():
-    data = request.json.copy()
-    data['timestamp'] = datetime.now().isoformat()
+    found = app.config['mongo'].microweb.requests.find()
+    if request.method == 'GET':
+        results = [dict(
+            id=str(document['_id']),
+            email=document['email'],
+            title=document['title'],
+            timestamp=document['timestamp']
+        ) for document in found]
+        return jsonify(results), 200
+    elif request.method == 'POST':
+        data = request.json.copy()
+        data['timestamp'] = datetime.now().isoformat()
 
-    result = app.config['mongo'].microweb.requests.insert_one(data)
+        result = app.config['mongo'].microweb.requests.insert_one(data)
 
-    document = app.config['mongo'].microweb.requests.find_one(
-        {'_id': result.inserted_id})
+        document = app.config['mongo'].microweb.requests.find_one(
+            {'_id': result.inserted_id})
 
-    return jsonify(
-        id=str(document['_id']),
-        email=document['email'],
-        title=document['title'],
-        timestamp=document['timestamp']), 201
+        return jsonify(
+            id=str(document['_id']),
+            email=document['email'],
+            title=document['title'],
+            timestamp=document['timestamp']), 201
 
 
 @app.route('/request/<request_id>', methods=['GET', 'DELETE'])

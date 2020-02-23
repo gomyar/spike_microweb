@@ -63,3 +63,26 @@ class MicrowebTest(unittest.TestCase):
     def test_delete_request_nonexistant(self):
         response = self.client.delete("/request/5e52aa9d24c18d1fc31ce3ee")
         self.assertEquals(404, response.status_code)
+
+    def test_get_all_requests(self):
+        setup1 = self.mock_mongo.microweb.requests.insert_one({
+            'title': 'Gerry',
+            'email': 'gerry@gerry.com',
+            'timestamp': '2020-11-11'})
+        setup2 = self.mock_mongo.microweb.requests.insert_one({
+            'title': 'Fred',
+            'email': 'fred@fred.com',
+            'timestamp': '2020-12-12'})
+
+        response = self.client.get("/request")
+
+        self.assertEquals(200, response.status_code)
+        results = response.json
+
+        self.assertEquals("Gerry", results[0]['title'])
+        self.assertEquals("gerry@gerry.com", results[0]['email'])
+        self.assertEquals("2020-11-11", results[0]['timestamp'])
+
+        self.assertEquals("Fred", results[1]['title'])
+        self.assertEquals("fred@fred.com", results[1]['email'])
+        self.assertEquals("2020-12-12", results[1]['timestamp'])
