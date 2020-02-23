@@ -58,6 +58,7 @@ def request_get(request_id):
     elif request.method == 'DELETE':
         result = get_collection().delete_one({
             '_id': ObjectId(request_id)})
+
         if result.deleted_count:
             return "", 204
         else:
